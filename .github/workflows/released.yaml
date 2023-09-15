@@ -43,7 +43,7 @@ jobs:
           username: vban
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and push with tags
-        id: build
+        id: tags
         if: ${{ github.ref_name != 'main' }}
         uses: docker/build-push-action@v4
         with:
@@ -51,9 +51,15 @@ jobs:
           platforms: ${{ matrix.platform }}
           push: true
           tags: vban/node:${{  github.ref_name }}
+      - name: Export digest by tags
+        if: ${{ github.ref_name != 'main' }}
+        run: |
+          mkdir -p /tmp/digests
+          digest="${{ steps.tags.outputs.digest }}"
+          touch "/tmp/digests/${digest#sha256:}" 
 
       - name: Build and push with main
-        id: build
+        id: main
         if: ${{ github.ref_name == 'main' }}
         uses: docker/build-push-action@v5
         with:
@@ -62,10 +68,12 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           outputs: type=image,name=${{ env.REGISTRY_IMAGE }},push-by-digest=true,name-canonical=true,push=true
       - name: Export digest
+        if: ${{ github.ref_name == 'main' }}
         run: |
           mkdir -p /tmp/digests
-          digest="${{ steps.build.outputs.digest }}"
-          touch "/tmp/digests/${digest#sha256:}"          
+          digest="${{ steps.main.outputs.digest }}"
+          touch "/tmp/digests/${digest#sha256:}"  
+
       - name: Upload digest
         uses: actions/upload-artifact@v3
         with:
