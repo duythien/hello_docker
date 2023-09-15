@@ -16,8 +16,8 @@ COPY --from=builder /substrate/target/release/hello_docker /usr/local/bin
 
 RUN mkdir -p /root/.local/share && \
     mkdir /data && \
-    ln -s /data /root/.local/share/node-template
+    ln -s /data /root/.local/share/hello_docker
 
 VOLUME ["/data"]
 EXPOSE 30333 9933 9944
-ENTRYPOINT ["/usr/local/bin/node-template"]
+ENTRYPOINT ["/usr/local/bin/hello_docker"]

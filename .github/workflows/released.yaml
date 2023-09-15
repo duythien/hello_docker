@@ -48,4 +48,4 @@ jobs:
           context: .
           platforms: ${{ matrix.platform }}
           push: true
-          tags: vban/node
+          tags: vban/test
