@@ -50,6 +50,7 @@ jobs:
           tags: vban/node:${{  github.ref_name }}
 
       - name: Build and push with main
+        id: build
         if: ${{ github.ref_name == 'main' }}
         uses: docker/build-push-action@v5
         with:
