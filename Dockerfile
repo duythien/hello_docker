@@ -20,4 +20,4 @@ RUN mkdir -p /root/.local/share && \
 
 VOLUME ["/data"]
 EXPOSE 30333 9933 9944
-ENTRYPOINT ["/usr/local/bin/hello_docker"]
+ENTRYPOINT ["bash"]
