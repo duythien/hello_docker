@@ -5,7 +5,7 @@ on:
     branches:
       - main
 env:
-  REGISTRY_IMAGE: vban/test
+  REGISTRY_IMAGE: vban/thien
 jobs:
   build:
     runs-on: ubuntu-latest
