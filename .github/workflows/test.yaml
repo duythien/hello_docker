@@ -33,4 +33,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/duythien/hello_docker
+          tags: ghcr.io/duythien/abc
