@@ -31,6 +31,14 @@ jobs:
         sudo rm -rf "$AGENT_TOOLSDIRECTORY"
     - name: Build
       run: cargo build
+    - name: Upload digest
+      uses: actions/upload-artifact@v3
+      with:
+        name: node-template
+        path: /home/runner/work/hello_docker/hello_docker
+        if-no-files-found: error
+        retention-days: 1
+    
   run-test:
     needs: build
     runs-on:  ubuntu-latest
@@ -47,6 +55,14 @@ jobs:
         sudo rm -rf /opt/ghc
         sudo rm -rf /usr/local/share/boost
         sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+    - name: Download
+      id: download
+      uses: actions/download-artifact@v3
+      with:
+        name: node-template
+        path: ~/download/node-template
+    - name: 'Echo download path'
+      run: echo ${{steps.download.outputs.download-path}}
     - name: Run test
       run: cargo test  -- --test-threads=1
   run-expensive-test:
