@@ -1,7 +1,8 @@
 name: Ink
 on:
   workflow_run:
-    workflows: [Rust]
+    workflows:
+      -  Rust
     types:
       - completed
 env:
