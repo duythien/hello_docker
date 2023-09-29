@@ -2,9 +2,12 @@ name: Ink
 on:
   workflow_run:
     workflows:
-      - test
+      - Rust
     types:
       - completed
+  pull_request:
+    branches:
+      - main
 env:
   CARGO_TERM_COLOR: always
 
