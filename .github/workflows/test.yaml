@@ -20,6 +20,16 @@ jobs:
       run: sudo apt update -y && sudo apt install libwayland-dev libprotobuf-dev gcc-multilib clang libclang-dev protobuf-compiler -y
     - name: Install rust-src and clippy
       run: rustup component add rust-src clippy
+    - name: Cache rust
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cargo/bin/
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          target/
+      key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
     - name: Run Clippy
       run: cargo clippy --all-targets
     - name: Freeing up more disk space
