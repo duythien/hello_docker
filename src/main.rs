@@ -26,7 +26,7 @@ async fn main() -> Result<(), Error> {
     //let s = vec!["udon".to_string(), "ramen".to_string(), "soba".to_string()];
 
     //let u = s;
-
+    println!("{:?}", add(1, 2));
     Ok(())
 }
 
