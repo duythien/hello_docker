@@ -39,6 +39,16 @@ jobs:
         path: ~/download/node-template
     - name: 'Echo download path'
       run: echo ${{steps.download.outputs.download-path}}
+    - name: Cache rust
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cargo/bin/
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          target/
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
     - name: Run test
       run: cargo test  -- --test-threads=1
   run-expensive-test:
