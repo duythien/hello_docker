@@ -7,7 +7,7 @@ RUN apt-get update -y && apt-get install libwayland-dev libprotobuf-dev  clang l
 
 
 COPY . /substrate
-RUN cargo build --release -vvv
+RUN cargo build  -vvv
 
 # This is the 2nd stage: a very small image where we copy the Substrate binary."
 FROM --platform=$BUILDPLATFORM ubuntu:22.04

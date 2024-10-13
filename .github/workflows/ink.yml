@@ -1,0 +1,24 @@
+name: Ink
+on:
+  workflow_run:
+    workflows: ["Rust"]
+    types:
+      - completed
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  ink-test:
+    runs-on:  ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Download Artifacts
+      id: download
+      uses: dawidd6/action-download-artifact@v2
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        workflow: test.yaml
+        name: node-template
+        path: ~/work/node-template
+    - name: 'Echo download path'
+      run: echo ${{steps.download.outputs.download-path}}

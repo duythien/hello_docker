@@ -16,53 +16,44 @@ jobs:
     runs-on:  ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Install protobuf and dep
-      run: sudo apt update -y && sudo apt install libwayland-dev libprotobuf-dev gcc-multilib clang libclang-dev protobuf-compiler -y
-    - name: Install rust-src and clippy
-      run: rustup component add rust-src clippy
-    - name: Run Clippy
-      run: cargo clippy --all-targets
-    - name: Freeing up more disk space
-      run: |
-        sudo rm -rf /usr/local/lib/android # will release about 10 GB if you don't need Android
-        sudo rm -rf /usr/share/dotnet # will release about 20GB if you don't need .NET
-        sudo rm -rf /opt/ghc
-        sudo rm -rf /usr/local/share/boost
-        sudo rm -rf "$AGENT_TOOLSDIRECTORY"
     - name: Build
       run: cargo build
+    - name: Upload digest
+      uses: actions/upload-artifact@v3
+      with:
+        name: node-template
+        path: /home/runner/work/hello_docker/hello_docker
+        if-no-files-found: error
+        retention-days: 1
+    
   run-test:
     needs: build
     runs-on:  ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Install protobuf and dep
-      run: sudo apt update -y && sudo apt install libwayland-dev libprotobuf-dev gcc-multilib clang libclang-dev protobuf-compiler -y
-    - name: Install rust-src and clippy
-      run: rustup component add rust-src clippy
-    - name: Freeing up more disk space
-      run: |
-        sudo rm -rf /usr/local/lib/android # will release about 10 GB if you don't need Android
-        sudo rm -rf /usr/share/dotnet # will release about 20GB if you don't need .NET
-        sudo rm -rf /opt/ghc
-        sudo rm -rf /usr/local/share/boost
-        sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+    - name: Download
+      id: download
+      uses: actions/download-artifact@v3
+      with:
+        name: node-template
+        path: ~/download/node-template
+    - name: 'Echo download path'
+      run: echo ${{steps.download.outputs.download-path}}
+    - name: Cache rust
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cargo/bin/
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          target/
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
     - name: Run test
-      run: cargo test   --test-threads=1
+      run: cargo test  -- --test-threads=1 --verbose
   run-expensive-test:
     runs-on:  ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Install protobuf and dep
-      run: sudo apt update -y && sudo apt install libwayland-dev libprotobuf-dev gcc-multilib clang libclang-dev protobuf-compiler -y
-    - name: Install rust-src and clippy
-      run: rustup component add rust-src clippy
-    - name: Freeing up more disk space
-      run: |
-        sudo rm -rf /usr/local/lib/android # will release about 10 GB if you don't need Android
-        sudo rm -rf /usr/share/dotnet # will release about 20GB if you don't need .NET
-        sudo rm -rf /opt/ghc
-        sudo rm -rf /usr/local/share/boost
-        sudo rm -rf "$AGENT_TOOLSDIRECTORY"
     - name: Run expensive test
-      run: cargo test --ignored
+      run: cargo test -- --ignored
