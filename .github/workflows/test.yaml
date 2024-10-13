@@ -50,7 +50,7 @@ jobs:
           target/
         key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
     - name: Run test
-      run: cargo test  -- --test-threads=1
+      run: cargo test  -- --test-threads=1 --verbose
   run-expensive-test:
     runs-on:  ubuntu-latest
     steps:
