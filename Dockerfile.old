@@ -1,0 +1,29 @@
+# This is the build stage for Substrate. Here we create the binary.
+FROM --platform=$BUILDPLATFORM rust:1.71.1 as builder
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+
+WORKDIR /substrate
+
+RUN apt-get update -y && apt-get install libwayland-dev libprotobuf-dev  clang libclang-dev protobuf-compiler -y
+
+RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM" > /log
+ENV CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc \
+    CC_aarch64_unknown_linux_gnu=aarch64-linux-gnu-gcc \
+    CXX_aarch64_unknown_linux_gnu=aarch64-linux-gnu-g++
+
+
+COPY . /substrate
+RUN cargo build --release
+
+FROM debian:buster-slim
+COPY --from=builder /substrate/target/release/hello_docker /usr/local/bin
+
+RUN mkdir -p /root/.local/share && \
+    mkdir /data && \
+    ln -s /data /root/.local/share/hello_docker
+
+VOLUME ["/data"]
+EXPOSE 30333 9933 9944
+CMD ["bash"]
+

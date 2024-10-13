@@ -1,0 +1,33 @@
+[package]
+name = "hello_docker"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+unconst_trait_impl = "0.1.5"
+tokio = { version = "1.34.0", features = ["full"] }
+ipfs-api-backend-hyper = "0.6"
+ipfs-api = "0.17.0"
+ipfs-api-backend-actix = "0.7"
+rust-ipfs = "0.9.0"
+anyhow = "1.0.79"
+libipld = "0.16.0"
+futures = { version = "0.3" }
+clap = { version = "4.3", features = ["derive"] }
+tracing = { default-features = false, features = ["log"], version = "0.1" }
+tracing-subscriber = { default-features = false, features = [
+    "fmt",
+    "tracing-log",
+    "ansi",
+    "env-filter",
+], version = "0.3" }
+sp-keyring = { version = "2.0.0", default-features = false }
+async-std = { version = "1.6.4", features = ["attributes"] }
+#bs58 = { version = "0.4.0" }
+sp-core = "31.0.0"
+#sp-core = { default-features = false, git = "https://github.com/Ali-Usama/substrate.git", branch = "polkadot-v0.9.43" }
+codec = { package = "parity-scale-codec", version = "3", default-features = false }
+bs58 = { version = "0.5.0", default-features = false, features = ["alloc"] }
+multihash = { version = "0.19.1", default-features = false, features = ["alloc"] }
