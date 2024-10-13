@@ -27,6 +27,8 @@ async fn main() -> Result<(), Error> {
 
     //let u = s;
     println!("{:?}", add(1, 2));
+    println!("{:?}", add(1, 5));
+
     Ok(())
 }
 
