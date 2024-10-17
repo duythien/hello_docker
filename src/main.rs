@@ -17,6 +17,10 @@ async fn main() -> Result<(), Error> {
     Ok(())
 }
 
+#[subxt::subxt(runtime_metadata_path = "../metadata.scale")] // relace path accordingly 
+pub mod voice_ban {}
+
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -65,18 +69,28 @@ mod tests {
     }
     #[tokio::test]
     async fn test_ipfs_get() {
-        //let node = start_node().await;
-        let sipfs = setup_ipfs().await;
+        let node = spawn_node("--alice", "random-tmp-path",9945, 30337);
+        let second_ipfs = setup_ipfs().await;
         //let cid = cid produced by the node; you can get it using subxt like this:
-        /*let query = voice_ban::storage().ipfs_address().ipfs_cids();
+        let query = voice_ban::storage().ipfs_address().ipfs_cids();
         let storage = client.storage().at_latest().await.unwrap();
-        let cids = storage.fetch(&query).await.unwrap().unwrap();*/
-        let cid =
-            IpfsPath::try_from("/ipfs/QmQJNmZg257CPZuq2aMpqwP53Up5P7NeZHQXbkWmQcnMyk").unwrap();
+        let cids = storage.fetch(&query).await.unwrap().unwrap();
+        let cid = cids[0].clone()
         //let cids = storage.fetch(&query).await.unwrap().unwrap();
-        let retrieved_data = ipfs_get(&sipfs, cid).await.unwrap();
+        let retrieved_data = ipfs_get(&second_ipfs, cid).await.unwrap();
 
         dbg!(retrieved_data);
         //assert_eq!(data, retrieved_data);
     }
+
+    fn spawn(ar: &str, path: &str, port: u16, porty: u16) -> Child {
+    let mut cmd =
+        Command::new("/Users/kofiotuo/CLionProjects/VoiceBanBackend/target/release/vban-node"); // replace with the node path
+        .arg(format!("--port={}", porty))
+        .arg(format!("--rpc-port={}", port))
+        .arg(format!("--base-path=/tmp/2uas13{}", path))
+        .arg(ar);
+    cmd.spawn().unwrap()
+}
+
 }
