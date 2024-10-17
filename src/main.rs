@@ -72,6 +72,7 @@ mod tests {
         let node = spawn_node("--alice", "random-tmp-path",9945, 30337);
         let second_ipfs = setup_ipfs().await;
         //let cid = cid produced by the node; you can get it using subxt like this:
+        let client = OnlineClient::<PolkadotConfig>::from_url(ws).await;
         let query = voice_ban::storage().ipfs_address().ipfs_cids();
         let storage = client.storage().at_latest().await.unwrap();
         let cids = storage.fetch(&query).await.unwrap().unwrap();
